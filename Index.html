@@ -1,171 +1,140 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ખોવાયેલો ફોન</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ખોવાયેલો ફોન</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+body{
+  margin:0;
+  padding:20px;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Arial,sans-serif;
+  background:#f2f4f7;
+}
 
-    body {
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: #f2f4f7;
-    }
+.card{
+  width:100%;
+  max-width:500px;
+  background:white;
+  padding:30px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 5px 25px rgba(0,0,0,.12);
+}
 
-    .card {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 30px;
-      border-radius: 18px;
-      text-align: center;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-    }
+h1{color:#222}
 
-    h1 {
-      color: #222;
-    }
+p{
+  color:#555;
+  line-height:1.6;
+}
 
-    p {
-      color: #555;
-      line-height: 1.6;
-    }
+.warning{
+  background:#fff4d6;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      border: 0;
-      border-radius: 10px;
-      background: #1769e0;
-      color: white;
-      font-size: 17px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
+button{
+  width:100%;
+  padding:15px;
+  margin-top:18px;
+  border:0;
+  border-radius:10px;
+  background:#1769e0;
+  color:white;
+  font-size:17px;
+}
 
-    #status {
-      margin-top: 20px;
-      line-height: 1.7;
-    }
+#status{
+  margin-top:20px;
+  line-height:1.7;
+}
 
-    .warning {
-      background: #fff4d6;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    a {
-      color: #1769e0;
-      font-weight: bold;
-    }
-  </style>
+a{
+  color:#1769e0;
+  font-weight:bold;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
+<div class="card">
 
-    <h1>📱 આ ફોન ખોવાયેલો છે</h1>
+<h1>📱 આ ફોન ખોવાયેલો છે</h1>
 
-    <p>
-      જો તમને આ ફોન મળ્યો હોય, તો કૃપા કરીને માલિકને ફોન પરત કરવામાં મદદ કરો.
-    </p>
+<p>
+જો તમને આ ફોન મળ્યો હોય, તો કૃપા કરીને માલિકને ફોન પરત કરવામાં મદદ કરો.
+</p>
 
-    <div class="warning">
-      Location શેર કરવી તમારી મંજૂરી પર આધારિત છે.
-      નીચેનું button દબાવ્યા પછી browser location permission પૂછશે.
-    </div>
+<div class="warning">
+Location શેર કરવી તમારી મંજૂરી પર આધારિત છે.
+Button દબાવ્યા પછી browser permission પૂછશે.
+</div>
 
-    <button id="shareLocation">
-      📍 Location Share કરો
-    </button>
+<button id="shareLocation">
+📍 Location Share કરો
+</button>
 
-    <div id="status"></div>
+<div id="status"></div>
 
-  </div>
+</div>
 
-  <script>
+<script>
 
-    const button = document.getElementById("shareLocation");
-    const status = document.getElementById("status");
+document.getElementById("shareLocation").onclick=function(){
 
-    button.addEventListener("click", function () {
+const status=document.getElementById("status");
 
-      if (!navigator.geolocation) {
-        status.textContent =
-          "❌ આ browser location sharing support કરતું નથી.";
-        return;
-      }
+if(!navigator.geolocation){
+status.innerHTML="❌ આ browser location support કરતું નથી.";
+return;
+}
 
-      status.textContent =
-        "⏳ Location permission માંગવામાં આવી રહી છે...";
+status.innerHTML="⏳ Location permission માંગવામાં આવી રહી છે...";
 
-      navigator.geolocation.getCurrentPosition(
+navigator.geolocation.getCurrentPosition(
 
-        function(position) {
+function(position){
 
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const accuracy = Math.round(position.coords.accuracy);
+const lat=position.coords.latitude;
+const lon=position.coords.longitude;
+const accuracy=Math.round(position.coords.accuracy);
 
-          const map =
-            "https://www.google.com/maps?q=" +
-            latitude + "," + longitude;
+const map="https://www.google.com/maps?q="+lat+","+lon;
 
-          status.innerHTML = `
-            <strong>✅ Location મળી ગઈ છે.</strong>
-            <br><br>
-            Latitude: ${latitude.toFixed(6)}
-            <br>
-            Longitude: ${longitude.toFixed(6)}
-            <br>
-            Accuracy: આશરે ${accuracy} મીટર
-            <br><br>
-            <a href="${map}" target="_blank">
-              🗺️ Google Maps પર Location જુઓ
-            </a>
-          `;
-        },
+status.innerHTML=
+"<strong>✅ Location મળી ગઈ છે.</strong><br><br>"+
+"Latitude: "+lat.toFixed(6)+"<br>"+
+"Longitude: "+lon.toFixed(6)+"<br>"+
+"Accuracy: આશરે "+accuracy+" મીટર<br><br>"+
+'<a href="'+map+'" target="_blank">🗺️ Google Maps પર Location જુઓ</a>';
 
-        function(error) {
+},
 
-          if (error.code === 1) {
-            status.textContent =
-              "❌ Location permission આપવામાં આવી નથી.";
-          } else if (error.code === 2) {
-            status.textContent =
-              "❌ Location ઉપલબ્ધ નથી.";
-          } else if (error.code === 3) {
-            status.textContent =
-              "❌ Location મેળવવામાં સમય લાગી ગયો.";
-          } else {
-            status.textContent =
-              "❌ Location મેળવી શકાઈ નથી.";
-          }
+function(){
+status.innerHTML=
+"❌ Location permission આપવામાં આવી નથી અથવા location મળી નથી.";
+},
 
-        },
+{
+enableHighAccuracy:true,
+timeout:15000,
+maximumAge:0
+}
 
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0
-        }
+);
 
-      );
+};
 
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
